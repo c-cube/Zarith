@@ -1,0 +1,717 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=utf8" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Q.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Z" rel="Chapter" href="Z.html">
+<link title="Q" rel="Chapter" href="Q.html">
+<link title="Big_int_Z" rel="Chapter" href="Big_int_Z.html"><link title="Toplevel" rel="Section" href="#1_Toplevel">
+<link title="Types" rel="Section" href="#1_Types">
+<link title="Construction" rel="Section" href="#1_Construction">
+<link title="Basic arithmetic operations" rel="Section" href="#1_Basicarithmeticoperations">
+<link title="Bit-level operations" rel="Section" href="#1_Bitleveloperations">
+<link title="Conversions" rel="Section" href="#1_Conversions">
+<link title="Printing" rel="Section" href="#1_Printing">
+<link title="Ordering" rel="Section" href="#1_Ordering">
+<link title="Elementary number theory" rel="Section" href="#1_Elementarynumbertheory">
+<link title="Powers" rel="Section" href="#1_Powers">
+<link title="Representation" rel="Section" href="#1_Representation">
+<link title="Prefix and infix operators" rel="Section" href="#1_Prefixandinfixoperators">
+<link title="Miscellaneous" rel="Section" href="#1_Miscellaneous">
+<title>Z</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Q.html" title="Q">Next</a>
+</div>
+<h1>Module <a href="type_Z.html">Z</a></h1>
+
+<pre><span class="keyword">module</span> Z: <code class="code">sig</code> <a href="Z.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Integers.
+<p>
+
+   This modules provides arbitrary-precision integers.
+   Small integers internally use a regular OCaml <code class="code">int</code>.
+   When numbers grow too large, we switch transparently to GMP numbers
+   (<code class="code">mpn</code> numbers fully allocated on the OCaml heap).
+<p>
+
+   This interface is rather similar to that of <code class="code">Int32</code> and <code class="code">Int64</code>,
+   with some additional functions provided natively by GMP
+   (GCD, square root, pop-count, etc.).
+<p>
+
+   This file is part of the Zarith library 
+   http://forge.ocamlcore.org/projects/zarith .
+   It is distributed under LGPL 2 licensing, with static linking exception.
+   See the LICENSE file included in the distribution.
+<p>
+
+   Copyright (c) 2010-2011 Antoine Miné, Abstraction project.
+   Abstraction is part of the LIENS (Laboratoire d'Informatique de l'ENS),
+   a joint laboratory by:
+   CNRS (Centre national de la recherche scientifique, France),
+   ENS (École normale supérieure, Paris, France),
+   INRIA Rocquencourt (Institut national de recherche en informatique, France).<br>
+</div>
+<hr width="100%">
+<br>
+<h1 id="1_Toplevel">Toplevel</h1><br>
+<br>
+For an optimal experience with the <code class="code">ocaml</code> interactive toplevel, 
+    the magic commands are:
+<p>
+
+    <pre class="codepre"><code class="code">    #load "zarith.cma";;
+    #install_printer Z.pp_print;;
+    </code></pre><br>
+<br>
+<h1 id="1_Types">Types</h1><br>
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+Type of integers of arbitrary length.<br>
+</div>
+
+
+<pre><span id="EXCEPTIONOverflow"><span class="keyword">exception</span> Overflow</span></pre>
+<div class="info ">
+Raised by conversion functions when the value cannot be represented in
+    the destination type.<br>
+</div>
+<br>
+<h1 id="1_Construction">Construction</h1><br>
+
+<pre><span id="VALzero"><span class="keyword">val</span> zero</span> : <code class="type"><a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+The number 0.<br>
+</div>
+
+<pre><span id="VALone"><span class="keyword">val</span> one</span> : <code class="type"><a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+The number 1.<br>
+</div>
+
+<pre><span id="VALminus_one"><span class="keyword">val</span> minus_one</span> : <code class="type"><a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+The number -1.<br>
+</div>
+
+<pre><span id="VALof_int"><span class="keyword">val</span> of_int</span> : <code class="type">int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Converts from a base integer.<br>
+</div>
+
+<pre><span id="VALof_int32"><span class="keyword">val</span> of_int32</span> : <code class="type">int32 -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Converts from a 32-bit integer.<br>
+</div>
+
+<pre><span id="VALof_int64"><span class="keyword">val</span> of_int64</span> : <code class="type">int64 -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Converts from a 64-bit integer.<br>
+</div>
+
+<pre><span id="VALof_nativeint"><span class="keyword">val</span> of_nativeint</span> : <code class="type">nativeint -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Converts from a native integer.<br>
+</div>
+
+<pre><span id="VALof_float"><span class="keyword">val</span> of_float</span> : <code class="type">float -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Converts from a floating-point value. 
+    The value is truncated (rounded towards zero).
+    Raises <code class="code">Overflow</code> on infinity and NaN arguments.<br>
+</div>
+
+<pre><span id="VALof_string"><span class="keyword">val</span> of_string</span> : <code class="type">string -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Converts a string to an integer.
+    An optional <code class="code">-</code> prefix indicates a negative number, while a <code class="code">+</code>
+    prefix is ignored.
+    An optional prefix <code class="code">0x</code>, <code class="code">0o</code>, or <code class="code">0b</code> (following the optional <code class="code">-</code>
+    or <code class="code">+</code> prefix) indicates that the number is,
+    represented, in hexadecimal, octal, or binary, respectively.
+    Otherwise, base 10 is assumed.
+    (Unlike C, a lone <code class="code">0</code> prefix does not denote octal.)
+    Raises an <code class="code">Invalid_argument</code> exception if the string is not a
+    syntactically correct representation of an integer.<br>
+</div>
+
+<pre><span id="VALof_substring"><span class="keyword">val</span> of_substring</span> : <code class="type">string -> pos:int -> len:int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_substring s ~pos ~len</code> is the same as <code class="code">of_string (String.sub s
+    pos len)</code><br>
+</div>
+
+<pre><span id="VALof_string_base"><span class="keyword">val</span> of_string_base</span> : <code class="type">int -> string -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Parses a number represented as a string in the specified base,
+    with optional <code class="code">-</code> or <code class="code">+</code> prefix.
+    The base must be between 2 and 16.<br>
+</div>
+
+<pre><span id="VALof_substring_base"><span class="keyword">val</span> of_substring_base</span> : <code class="type">int -> string -> pos:int -> len:int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">of_substring_base base s ~pos ~len</code> is the same as <code class="code">of_string_base
+    base (String.sub s pos len)</code><br>
+</div>
+<br>
+<h1 id="1_Basicarithmeticoperations">Basic arithmetic operations</h1><br>
+
+<pre><span id="VALsucc"><span class="keyword">val</span> succ</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns its argument plus one.<br>
+</div>
+
+<pre><span id="VALpred"><span class="keyword">val</span> pred</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns its argument minus one.<br>
+</div>
+
+<pre><span id="VALabs"><span class="keyword">val</span> abs</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Absolute value.<br>
+</div>
+
+<pre><span id="VALneg"><span class="keyword">val</span> neg</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Unary negation.<br>
+</div>
+
+<pre><span id="VALadd"><span class="keyword">val</span> add</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Addition.<br>
+</div>
+
+<pre><span id="VALsub"><span class="keyword">val</span> sub</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Subtraction.<br>
+</div>
+
+<pre><span id="VALmul"><span class="keyword">val</span> mul</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Multiplication.<br>
+</div>
+
+<pre><span id="VALdiv"><span class="keyword">val</span> div</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Integer division. The result is truncated towards zero
+    and obeys the rule of signs.
+    Raises <code class="code">Division_by_zero</code> if the divisor (second argument) is 0.<br>
+</div>
+
+<pre><span id="VALrem"><span class="keyword">val</span> rem</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Integer remainder. Can raise a <code class="code">Division_by_zero</code>.
+    The result of <code class="code">rem a b</code> has the sign of <code class="code">a</code>, and its absolute value is
+    strictly smaller than the absolute value of <code class="code">b</code>.
+    The result satisfies the equality <code class="code">a = b * div a b + rem a b</code>.<br>
+</div>
+
+<pre><span id="VALdiv_rem"><span class="keyword">val</span> div_rem</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Computes both the integer quotient and the remainder.
+    <code class="code">div_rem a b</code> is equal to <code class="code">(div a b, rem a b)</code>.
+    Raises <code class="code">Division_by_zero</code> if <code class="code">b = 0</code>.<br>
+</div>
+
+<pre><span id="VALcdiv"><span class="keyword">val</span> cdiv</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Integer division with rounding towards +oo (ceiling).
+    Can raise a <code class="code">Division_by_zero</code>.<br>
+</div>
+
+<pre><span id="VALfdiv"><span class="keyword">val</span> fdiv</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Integer division with rounding towards -oo (floor).
+    Can raise a <code class="code">Division_by_zero</code>.<br>
+</div>
+
+<pre><span id="VALediv_rem"><span class="keyword">val</span> ediv_rem</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Euclidean division and remainder.  <code class="code">ediv_rem a b</code> returns a pair <code class="code">(q, r)</code>
+    such that <code class="code">a = b * q + r</code> and <code class="code">0 &lt;= r &lt; |b|</code>.
+    Raises <code class="code">Division_by_zero</code> if <code class="code">b = 0</code>.<br>
+</div>
+
+<pre><span id="VALediv"><span class="keyword">val</span> ediv</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Euclidean division. <code class="code">ediv a b</code> is equal to <code class="code">fst (ediv_rem a b)</code>.
+    The result satisfies <code class="code">0 &lt;= a - b * ediv a b &lt; |b|</code>.
+    Raises <code class="code">Division_by_zero</code> if <code class="code">b = 0</code>.<br>
+</div>
+
+<pre><span id="VALerem"><span class="keyword">val</span> erem</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Euclidean remainder.  <code class="code">erem a b</code> is equal to <code class="code">snd (ediv_rem a b)</code>.
+    The result satisfies <code class="code">0 &lt;= erem a b &lt; |b|</code> and
+    <code class="code">a = b * ediv a b + erem a b</code>.  Raises <code class="code">Division_by_zero</code> if <code class="code">b = 0</code>.<br>
+</div>
+
+<pre><span id="VALdivexact"><span class="keyword">val</span> divexact</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">divexact a b</code> divides <code class="code">a</code> by <code class="code">b</code>, only producing correct result when the
+    division is exact, i.e., when <code class="code">b</code> evenly divides <code class="code">a</code>.
+    It should be faster than general division.
+    Can raise a <code class="code">Division_by_zero</code>.<br>
+</div>
+<br>
+<h1 id="1_Bitleveloperations">Bit-level operations</h1><br>
+<br>
+For all bit-level operations, negative numbers are considered in 2's
+    complement representation, starting with a virtual infinite number of 
+    1s.<br>
+
+<pre><span id="VALlogand"><span class="keyword">val</span> logand</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bitwise logical and.<br>
+</div>
+
+<pre><span id="VALlogor"><span class="keyword">val</span> logor</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bitwise logical or.<br>
+</div>
+
+<pre><span id="VALlogxor"><span class="keyword">val</span> logxor</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bitwise logical exclusive or.<br>
+</div>
+
+<pre><span id="VALlognot"><span class="keyword">val</span> lognot</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bitwise logical negation. 
+    The identity <code class="code">lognot a</code>=<code class="code">-a-1</code> always hold.<br>
+</div>
+
+<pre><span id="VALshift_left"><span class="keyword">val</span> shift_left</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Shifts to the left. 
+    Equivalent to a multiplication by a power of 2.
+    The second argument must be non-negative.<br>
+</div>
+
+<pre><span id="VALshift_right"><span class="keyword">val</span> shift_right</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Shifts to the right. 
+    This is an arithmetic shift, 
+    equivalent to a division by a power of 2 with rounding towards -oo.
+    The second argument must be non-negative.<br>
+</div>
+
+<pre><span id="VALshift_right_trunc"><span class="keyword">val</span> shift_right_trunc</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Shifts to the right, rounding towards 0.
+    This is equivalent to a division by a power of 2, with truncation.
+    The second argument must be non-negative.<br>
+</div>
+
+<pre><span id="VALnumbits"><span class="keyword">val</span> numbits</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Returns the number of significant bits in the given number.
+    If <code class="code">x</code> is zero, <code class="code">numbits x</code> returns 0.  Otherwise,
+    <code class="code">numbits x</code> returns a positive integer <code class="code">n</code> such that
+    <code class="code">2^{n-1} &lt;= |x| &lt; 2^n</code>.  Note that <code class="code">numbits</code> is defined
+    for negative arguments, and that <code class="code">numbits (-x) = numbits x</code>.<br>
+</div>
+
+<pre><span id="VALtrailing_zeros"><span class="keyword">val</span> trailing_zeros</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Returns the number of trailing 0 bits in the given number.
+    If <code class="code">x</code> is zero, <code class="code">trailing_zeros x</code> returns <code class="code">max_int</code>.
+    Otherwise, <code class="code">trailing_zeros x</code> returns a nonnegative integer <code class="code">n</code>
+    which is the largest <code class="code">n</code> such that <code class="code">2^n</code> divides <code class="code">x</code> evenly.
+    Note that <code class="code">trailing_zeros</code> is defined for negative arguments,
+    and that <code class="code">trailing_zeros (-x) = trailing_zeros x</code>.<br>
+</div>
+
+<pre><span id="VALtestbit"><span class="keyword">val</span> testbit</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> bool</code></pre><div class="info ">
+<code class="code">testbit x n</code> return the value of bit number <code class="code">n</code> in <code class="code">x</code>:
+    <code class="code">true</code> if the bit is 1, <code class="code">false</code> if the bit is 0.
+    Bits are numbered from 0.  Raise <code class="code">Invalid_argument</code> if <code class="code">n</code>
+    is negative.<br>
+</div>
+
+<pre><span id="VALpopcount"><span class="keyword">val</span> popcount</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Counts the number of bits set. 
+    Raises <code class="code">Overflow</code> for negative arguments, as those have an infinite
+    number of bits set.<br>
+</div>
+
+<pre><span id="VALhamdist"><span class="keyword">val</span> hamdist</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Counts the number of different bits. 
+    Raises <code class="code">Overflow</code> if the arguments have different signs
+    (in which case the distance is infinite).<br>
+</div>
+<br>
+<h1 id="1_Conversions">Conversions</h1><br>
+<br>
+Note that, when converting to an integer type that cannot represent the 
+    converted value, an <code class="code">Overflow</code> exception is raised.<br>
+
+<pre><span id="VALto_int"><span class="keyword">val</span> to_int</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Converts to a base integer. May raise <code class="code">Overflow</code>.<br>
+</div>
+
+<pre><span id="VALto_int32"><span class="keyword">val</span> to_int32</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int32</code></pre><div class="info ">
+Converts to a 32-bit integer. May raise <code class="code">Overflow</code>.<br>
+</div>
+
+<pre><span id="VALto_int64"><span class="keyword">val</span> to_int64</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int64</code></pre><div class="info ">
+Converts to a 64-bit integer. May raise <code class="code">Overflow</code>.<br>
+</div>
+
+<pre><span id="VALto_nativeint"><span class="keyword">val</span> to_nativeint</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> nativeint</code></pre><div class="info ">
+Converts to a native integer. May raise <code class="code">Overflow</code>.<br>
+</div>
+
+<pre><span id="VALto_float"><span class="keyword">val</span> to_float</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> float</code></pre><div class="info ">
+Converts to a floating-point value.
+    This function rounds the given integer according to the current
+    rounding mode of the processor.  In default mode, it returns
+    the floating-point number nearest to the given integer,
+    breaking ties by rounding to even.<br>
+</div>
+
+<pre><span id="VALto_string"><span class="keyword">val</span> to_string</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Gives a human-readable, decimal string representation of the argument.<br>
+</div>
+
+<pre><span id="VALformat"><span class="keyword">val</span> format</span> : <code class="type">string -> <a href="Z.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Gives a string representation of the argument in the specified
+    printf-like format.
+    The general specification has the following form:
+<p>
+
+    <code class="code">% [flags] [width] type</code>
+<p>
+
+    Where the type actually indicates the base:
+<p>
+<ul>
+<li><code class="code">i</code>, <code class="code">d</code>, <code class="code">u</code>: decimal</li>
+<li><code class="code">b</code>: binary</li>
+<li><code class="code">o</code>: octal</li>
+<li><code class="code">x</code>: lowercase hexadecimal</li>
+<li><code class="code">X</code>: uppercase hexadecimal</li>
+</ul>
+
+    Supported flags are:
+<p>
+<ul>
+<li><code class="code">+</code>: prefix positive numbers with a <code class="code">+</code> sign</li>
+<li>space: prefix positive numbers with a space</li>
+<li><code class="code">-</code>: left-justify (default is right justification)</li>
+<li><code class="code">0</code>: pad with zeroes (instead of spaces)</li>
+<li><code class="code">#</code>: alternate formatting (actually, simply output a literal-like prefix: <code class="code">0x</code>, <code class="code">0b</code>, <code class="code">0o</code>)</li>
+</ul>
+
+    Unlike the classic <code class="code">printf</code>, all numbers are signed (even hexadecimal ones),
+    there is no precision field, and characters that are not part of the format
+    are simply ignored (and not copied in the output).<br>
+</div>
+
+<pre><span id="VALfits_int"><span class="keyword">val</span> fits_int</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Whether the argument fits in a regular <code class="code">int</code>.<br>
+</div>
+
+<pre><span id="VALfits_int32"><span class="keyword">val</span> fits_int32</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Whether the argument fits in an <code class="code">int32</code>.<br>
+</div>
+
+<pre><span id="VALfits_int64"><span class="keyword">val</span> fits_int64</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Whether the argument fits in an <code class="code">int64</code>.<br>
+</div>
+
+<pre><span id="VALfits_nativeint"><span class="keyword">val</span> fits_nativeint</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Whether the argument fits in a <code class="code">nativeint</code>.<br>
+</div>
+<br>
+<h1 id="1_Printing">Printing</h1><br>
+
+<pre><span id="VALprint"><span class="keyword">val</span> print</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Prints the argument on the standard output.<br>
+</div>
+
+<pre><span id="VALoutput"><span class="keyword">val</span> output</span> : <code class="type">Pervasives.out_channel -> <a href="Z.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Prints the argument on the specified channel.
+    Also intended to be used as <code class="code">%a</code> format printer in <code class="code">Printf.printf</code>.<br>
+</div>
+
+<pre><span id="VALsprint"><span class="keyword">val</span> sprint</span> : <code class="type">unit -> <a href="Z.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+To be used as <code class="code">%a</code> format printer in <code class="code">Printf.sprintf</code>.<br>
+</div>
+
+<pre><span id="VALbprint"><span class="keyword">val</span> bprint</span> : <code class="type">Buffer.t -> <a href="Z.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+To be used as <code class="code">%a</code> format printer in <code class="code">Printf.bprintf</code>.<br>
+</div>
+
+<pre><span id="VALpp_print"><span class="keyword">val</span> pp_print</span> : <code class="type">Format.formatter -> <a href="Z.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
+Prints the argument on the specified formatter. 
+    Can be used as <code class="code">%a</code> format printer in <code class="code">Format.printf</code> and as
+    argument to <code class="code">#install_printer</code> in the top-level.<br>
+</div>
+<br>
+<h1 id="1_Ordering">Ordering</h1><br>
+
+<pre><span id="VALcompare"><span class="keyword">val</span> compare</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Comparison.  <code class="code">compare x y</code> returns 0 if <code class="code">x</code> equals <code class="code">y</code>,
+    -1 if <code class="code">x</code> is smaller than <code class="code">y</code>, and 1 if <code class="code">x</code> is greater than <code class="code">y</code>.
+<p>
+
+    Note that Pervasive.compare can be used to compare reliably two integers
+    only on OCaml 3.12.1 and later versions.<br>
+</div>
+
+<pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Equality test.<br>
+</div>
+
+<pre><span id="VALleq"><span class="keyword">val</span> leq</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Less than or equal.<br>
+</div>
+
+<pre><span id="VALgeq"><span class="keyword">val</span> geq</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Greater than or equal.<br>
+</div>
+
+<pre><span id="VALlt"><span class="keyword">val</span> lt</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Less than (and not equal).<br>
+</div>
+
+<pre><span id="VALgt"><span class="keyword">val</span> gt</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Greater than (and not equal).<br>
+</div>
+
+<pre><span id="VALsign"><span class="keyword">val</span> sign</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Returns -1, 0, or 1 when the argument is respectively negative, null, or
+    positive.<br>
+</div>
+
+<pre><span id="VALmin"><span class="keyword">val</span> min</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the minimum of its arguments.<br>
+</div>
+
+<pre><span id="VALmax"><span class="keyword">val</span> max</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the maximum of its arguments.<br>
+</div>
+
+<pre><span id="VALis_even"><span class="keyword">val</span> is_even</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Returns true if the argument is even (divisible by 2), false if odd.<br>
+</div>
+
+<pre><span id="VALis_odd"><span class="keyword">val</span> is_odd</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Returns true if the argument is odd, false if even.<br>
+</div>
+
+<pre><span id="VALhash"><span class="keyword">val</span> hash</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Hashes a number.
+    This functions gives the same result as OCaml's polymorphic hashing
+    function.
+    The result is consistent with equality: if <code class="code">a</code> = <code class="code">b</code>, then <code class="code">hash a</code> =
+    <code class="code">hash b</code>.<br>
+</div>
+<br>
+<h1 id="1_Elementarynumbertheory">Elementary number theory</h1><br>
+
+<pre><span id="VALgcd"><span class="keyword">val</span> gcd</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Greatest common divisor. 
+    The result is always positive.
+    Raises a <code class="code">Division_by_zero</code> is either argument is null.<br>
+</div>
+
+<pre><span id="VALgcdext"><span class="keyword">val</span> gcdext</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">gcdext u v</code> returns <code class="code">(g,s,t)</code>  where <code class="code">g</code> is the greatest common divisor
+    and <code class="code">g=us+vt</code>.
+    <code class="code">g</code> is always positive.      
+    Raises a <code class="code">Division_by_zero</code> is either argument is null.
+<p>
+
+    Note: the function is based on the GMP <code class="code">mpn_gcdext</code> function. The exact choice of <code class="code">s</code> and <code class="code">t</code> such that <code class="code">g=us+vt</code> is not specified, as it may vary from a version of GMP to another (it has changed notably in GMP 4.3.0 and 4.3.1).<br>
+</div>
+
+<pre><span id="VALlcm"><span class="keyword">val</span> lcm</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Least common multiple.
+    The result is always positive.
+    Raises a <code class="code">Division_by_zero</code> is either argument is null.<br>
+</div>
+
+<pre><span id="VALpowm"><span class="keyword">val</span> powm</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">powm base exp mod</code> computes <code class="code">base</code>^<code class="code">exp</code> modulo <code class="code">mod</code>.
+    Negative <code class="code">exp</code> are supported, in which case (<code class="code">base</code>^-1)^(-<code class="code">exp</code>) modulo 
+    <code class="code">mod</code> is computed.
+    However, if <code class="code">exp</code> is negative but <code class="code">base</code> has no inverse modulo <code class="code">mod</code>, then
+    a <code class="code">Division_by_zero</code> is raised.<br>
+</div>
+
+<pre><span id="VALpowm_sec"><span class="keyword">val</span> powm_sec</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">powm_sec base exp mod</code> computes <code class="code">base</code>^<code class="code">exp</code> modulo <code class="code">mod</code>.
+    Unlike <code class="code">Z.powm</code>, this function is designed to take the same time
+    and have the same cache access patterns for any two same-size
+    arguments.  Used in cryptographic applications, it provides better
+    resistance to side-channel attacks than <code class="code">Z.powm</code>.
+    The exponent <code class="code">exp</code> must be positive, and the modulus <code class="code">mod</code>
+    must be odd.  Otherwise, <code class="code">Invalid_arg</code> is raised.<br>
+</div>
+
+<pre><span id="VALinvert"><span class="keyword">val</span> invert</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">invert base mod</code> returns the inverse of <code class="code">base</code> modulo <code class="code">mod</code>.
+    Raises a <code class="code">Division_by_zero</code> if <code class="code">base</code> is not invertible modulo <code class="code">mod</code>.<br>
+</div>
+
+<pre><span id="VALprobab_prime"><span class="keyword">val</span> probab_prime</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> int</code></pre><div class="info ">
+<code class="code">probab_prime x r</code> returns 0 if <code class="code">x</code> is definitely composite,
+    1 if <code class="code">x</code> is probably prime, and 2 if <code class="code">x</code> is definitely prime.
+    The <code class="code">r</code> argument controls how many Miller-Rabin probabilistic
+    primality tests are performed (5 to 10 is a reasonable value).<br>
+</div>
+
+<pre><span id="VALnextprime"><span class="keyword">val</span> nextprime</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the next prime greater than the argument.
+    The result is only prime with very high probability.<br>
+</div>
+<br>
+<h1 id="1_Powers">Powers</h1><br>
+
+<pre><span id="VALpow"><span class="keyword">val</span> pow</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">pow base exp</code> raises <code class="code">base</code> to the <code class="code">exp</code> power.
+    <code class="code">exp</code> must be non-negative.
+    Note that only exponents fitting in a machine integer are supported, as
+    larger exponents would surely make the result's size overflow the 
+    address space.<br>
+</div>
+
+<pre><span id="VALsqrt"><span class="keyword">val</span> sqrt</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the square root. The result is truncated (rounded down
+    to an integer).
+    Raises an <code class="code">Invalid_argument</code> on negative arguments.<br>
+</div>
+
+<pre><span id="VALsqrt_rem"><span class="keyword">val</span> sqrt_rem</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Returns the square root truncated, and the remainder. 
+    Raises an <code class="code">Invalid_argument</code> on negative arguments.<br>
+</div>
+
+<pre><span id="VALroot"><span class="keyword">val</span> root</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">root base n</code> computes the <code class="code">n</code>-th root of <code class="code">exp</code>.
+    <code class="code">n</code> must be non-negative.<br>
+</div>
+
+<pre><span id="VALperfect_power"><span class="keyword">val</span> perfect_power</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+True if the argument has the form <code class="code">a^b</code>, with <code class="code">b&gt;1</code><br>
+</div>
+
+<pre><span id="VALperfect_square"><span class="keyword">val</span> perfect_square</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+True if the argument has the form <code class="code">a^2</code>.<br>
+</div>
+
+<pre><span id="VALlog2"><span class="keyword">val</span> log2</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Returns the base-2 logarithm of its argument, rounded down to
+    an integer.  If <code class="code">x</code> is positive, <code class="code">log2 x</code> returns the largest <code class="code">n</code>
+    such that <code class="code">2^n &lt;= x</code>.  If <code class="code">x</code> is negative or zero, <code class="code">log2 x</code> raise
+    the <code class="code">Invalid_argument</code> exception.<br>
+</div>
+
+<pre><span id="VALlog2up"><span class="keyword">val</span> log2up</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Returns the base-2 logarithm of its argument, rounded up to
+    an integer.  If <code class="code">x</code> is positive, <code class="code">log2up x</code> returns the smallest <code class="code">n</code>
+    such that <code class="code">x &lt;= 2^n</code>.  If <code class="code">x</code> is negative or zero, <code class="code">log2up x</code> raise
+    the <code class="code">Invalid_argument</code> exception.<br>
+</div>
+<br>
+<h1 id="1_Representation">Representation</h1><br>
+
+<pre><span id="VALsize"><span class="keyword">val</span> size</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
+Returns the number of machine words used to represent the number.<br>
+</div>
+
+<pre><span id="VALextract"><span class="keyword">val</span> extract</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">extract a off len</code> returns a non-negative number corresponding to bits 
+    <code class="code">off</code> to <code class="code">off</code>+<code class="code">len</code>-1 of <code class="code">b</code>.
+    Negative <code class="code">a</code> are considered in infinite-length 2's complement
+    representation.<br>
+</div>
+
+<pre><span id="VALsigned_extract"><span class="keyword">val</span> signed_extract</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+<code class="code">signed_extract a off len</code> extracts bits <code class="code">off</code> to <code class="code">off</code>+<code class="code">len</code>-1 of <code class="code">b</code>,
+    as <code class="code">extract</code> does, then sign-extends bit <code class="code">len-1</code> of the result
+    (that is, bit <code class="code">off + len - 1</code> of <code class="code">a</code>).  The result is between
+    <code class="code">- 2{^[len]-1}</code> (included) and <code class="code">2{^[len]-1}</code> (excluded), 
+    and equal to <code class="code">extract a off len</code> modulo <code class="code">2{^len}</code>.<br>
+</div>
+
+<pre><span id="VALto_bits"><span class="keyword">val</span> to_bits</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> string</code></pre><div class="info ">
+Returns a binary representation of the argument.
+    The string result should be interpreted as a sequence of bytes,
+    corresponding to the binary representation of the absolute value of 
+    the argument in little endian ordering.
+    The sign is not stored in the string.<br>
+</div>
+
+<pre><span id="VALof_bits"><span class="keyword">val</span> of_bits</span> : <code class="type">string -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Constructs a number from a binary string representation.
+    The string is interpreted as a sequence of bytes in little endian order,
+    and the result is always positive.
+    We have the identity: <code class="code">of_bits (to_bits x) = abs x</code>.
+    However, we can have <code class="code">to_bits (of_bits s) &lt;&gt; s</code> due to the presence of
+    trailing zeros in s.<br>
+</div>
+<br>
+<h1 id="1_Prefixandinfixoperators">Prefix and infix operators</h1><br>
+<br>
+Classic (and less classic) prefix and infix <code class="code">int</code> operators are 
+   redefined on <code class="code">t</code>.
+<p>
+
+   This makes it easy to typeset expressions.
+   Using OCaml 3.12's local open, you can simply write
+   <code class="code">Z.(~$2 + ~$5 * ~$10)</code>.<br>
+
+<pre><span id="VAL(~-)"><span class="keyword">val</span> (~-)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Negation <code class="code">neg</code>.<br>
+</div>
+
+<pre><span id="VAL(~+)"><span class="keyword">val</span> (~+)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Identity.<br>
+</div>
+
+<pre><span id="VAL(+)"><span class="keyword">val</span> (+)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Addition <code class="code">add</code>.<br>
+</div>
+
+<pre><span id="VAL(-)"><span class="keyword">val</span> (-)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Subtraction <code class="code">sub</code>.<br>
+</div>
+
+<pre><span id="VAL( * )"><span class="keyword">val</span> ( * )</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Multiplication <code class="code">mul</code>.<br>
+</div>
+
+<pre><span id="VAL(/)"><span class="keyword">val</span> (/)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Truncated division <code class="code">div</code>.<br>
+</div>
+
+<pre><span id="VAL(/>)"><span class="keyword">val</span> (/&gt;)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Ceiling division <code class="code">cdiv</code>.<br>
+</div>
+
+<pre><span id="VAL(/<)"><span class="keyword">val</span> (/&lt;)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Flooring division <code class="code">fdiv</code>.<br>
+</div>
+
+<pre><span id="VAL(/|)"><span class="keyword">val</span> (/|)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Exact division <code class="code">div_exact</code>.<br>
+</div>
+
+<pre><span id="VAL(mod)"><span class="keyword">val</span> (mod)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Remainder <code class="code">rem</code>.<br>
+</div>
+
+<pre><span id="VAL(land)"><span class="keyword">val</span> (land)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bit-wise logical and <code class="code">logand</code>.<br>
+</div>
+
+<pre><span id="VAL(lor)"><span class="keyword">val</span> (lor)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bit-wise logical inclusive or <code class="code">logor</code>.<br>
+</div>
+
+<pre><span id="VAL(lxor)"><span class="keyword">val</span> (lxor)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bit-wise logical exclusive or <code class="code">logxor</code>.<br>
+</div>
+
+<pre><span id="VAL(~!)"><span class="keyword">val</span> (~!)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bit-wise logical negation <code class="code">lognot</code>.<br>
+</div>
+
+<pre><span id="VAL(lsl)"><span class="keyword">val</span> (lsl)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bit-wise shift to the left <code class="code">shift_left</code>.<br>
+</div>
+
+<pre><span id="VAL(asr)"><span class="keyword">val</span> (asr)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Bit-wise shift to the right <code class="code">shift_right</code>.<br>
+</div>
+
+<pre><span id="VAL(~$)"><span class="keyword">val</span> (~$)</span> : <code class="type">int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Conversion from <code class="code">int</code> <code class="code">of_int</code>.<br>
+</div>
+
+<pre><span id="VAL( ** )"><span class="keyword">val</span> ( ** )</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
+Power <code class="code">pow</code>.<br>
+</div>
+<br>
+<h1 id="1_Miscellaneous">Miscellaneous</h1><br>
+
+<pre><span id="VALversion"><span class="keyword">val</span> version</span> : <code class="type">string</code></pre><div class="info ">
+Library version (this file refers to version <code class="code">"1.5"</code>).<br>
+</div>
+</body></html>
