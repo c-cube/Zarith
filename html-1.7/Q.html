@@ -38,7 +38,7 @@ Rationals.
    integers from module Z.
 <p>
 
-   This file is part of the Zarith library 
+   This file is part of the Zarith library
    http://forge.ocamlcore.org/projects/zarith .
    It is distributed under LGPL 2 licensing, with static linking exception.
    See the LICENSE file included in the distribution.
@@ -227,7 +227,7 @@ Returns 1 if the argument is positive (including inf), -1 if it is
     This is a total ordering.
     Infinities are ordered in the natural way, while undefined is considered
     the smallest of all: undef = undef &lt; -inf &lt;= -inf &lt; x &lt; inf &lt;= inf.
-    This is consistent with OCaml's handling of floating-point infinities 
+    This is consistent with OCaml's handling of floating-point infinities
     and NaN.
 <p>
 
@@ -236,7 +236,7 @@ Returns 1 if the argument is positive (including inf), -1 if it is
 </div>
 
 <pre><span id="VALequal"><span class="keyword">val</span> equal</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
-Equality testing. 
+Equality testing.
     This is consistent with <code class="code">compare</code>; in particular, <code class="code">undef</code>=<code class="code">undef</code>.<br>
 </div>
 
@@ -272,7 +272,7 @@ Greater than (not equal).<br>
 <pre><span id="VALto_int64"><span class="keyword">val</span> to_int64</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> int64</code></pre>
 <pre><span id="VALto_nativeint"><span class="keyword">val</span> to_nativeint</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> nativeint</code></pre><div class="info ">
 Convert to integer by truncation.
-    Raises a <code class="code">Divide_by_zero</code> if the argument is an infinity or undefined. 
+    Raises a <code class="code">Divide_by_zero</code> if the argument is an infinity or undefined.
     Raises a <code class="code">Z.Overflow</code> if the result does not fit in the destination
     type.<br>
 </div>
@@ -282,7 +282,7 @@ Converts to human-readable, base-10, <code class="code">/</code>-separated ratio
 </div>
 
 <pre><span id="VALto_float"><span class="keyword">val</span> to_float</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> float</code></pre><div class="info ">
-Converts to a floating-point number, using the current 
+Converts to a floating-point number, using the current
     floating-point rounding mode.  With the default rounding mode,
     the result is the floating-point number closest to the given
     rational; ties break to even mantissa.<br>
@@ -351,7 +351,7 @@ To be used as <code class="code">%a</code> format printer in <code class="code">
 </div>
 
 <pre><span id="VALpp_print"><span class="keyword">val</span> pp_print</span> : <code class="type">Format.formatter -> <a href="Q.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
-Prints the argument on the specified formatter. 
+Prints the argument on the specified formatter.
     Also intended to be used as <code class="code">%a</code> format printer in <code class="code">Format.printf</code>.<br>
 </div>
 <br>
@@ -405,5 +405,29 @@ Conversion from <code class="code">Z.t</code>.<br>
 
 <pre><span id="VAL(///)"><span class="keyword">val</span> (///)</span> : <code class="type"><a href="Z.html#TYPEt">Z.t</a> -> <a href="Z.html#TYPEt">Z.t</a> -> <a href="Q.html#TYPEt">t</a></code></pre><div class="info ">
 Creates a rational from two <code class="code">Z.t</code>.<br>
+</div>
+
+<pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">equal</code>.<br>
+</div>
+
+<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">lt</code>.<br>
+</div>
+
+<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">gt</code>.<br>
+</div>
+
+<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">leq</code>.<br>
+</div>
+
+<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">geq</code>.<br>
+</div>
+
+<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Q.html#TYPEt">t</a> -> <a href="Q.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">a &lt;&gt; b</code> is equivalent to <code class="code">not (equal a b)</code>.<br>
 </div>
 </body></html>

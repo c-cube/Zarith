@@ -48,7 +48,7 @@ Integers.
    (GCD, square root, pop-count, etc.).
 <p>
 
-   This file is part of the Zarith library 
+   This file is part of the Zarith library
    http://forge.ocamlcore.org/projects/zarith .
    It is distributed under LGPL 2 licensing, with static linking exception.
    See the LICENSE file included in the distribution.
@@ -65,12 +65,17 @@ Integers.
 <br>
 <h1 id="1_Toplevel">Toplevel</h1><br>
 <br>
-For an optimal experience with the <code class="code">ocaml</code> interactive toplevel, 
+For an optimal experience with the <code class="code">ocaml</code> interactive toplevel,
     the magic commands are:
 <p>
 
     <pre class="codepre"><code class="code">    #load "zarith.cma";;
     #install_printer Z.pp_print;;
+    </code></pre>
+<p>
+
+    Alternatively, using the new <code class="code">Zarith_top</code> toplevel module, simply:
+    <pre class="codepre"><code class="code">    #require "zarith.top";;
     </code></pre><br>
 <br>
 <h1 id="1_Types">Types</h1><br>
@@ -118,7 +123,7 @@ Converts from a native integer.<br>
 </div>
 
 <pre><span id="VALof_float"><span class="keyword">val</span> of_float</span> : <code class="type">float -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-Converts from a floating-point value. 
+Converts from a floating-point value.
     The value is truncated (rounded towards zero).
     Raises <code class="code">Overflow</code> on infinity and NaN arguments.<br>
 </div>
@@ -239,7 +244,7 @@ Euclidean remainder.  <code class="code">erem a b</code> is equal to <code class
 <h1 id="1_Bitleveloperations">Bit-level operations</h1><br>
 <br>
 For all bit-level operations, negative numbers are considered in 2's
-    complement representation, starting with a virtual infinite number of 
+    complement representation, starting with a virtual infinite number of
     1s.<br>
 
 <pre><span id="VALlogand"><span class="keyword">val</span> logand</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
@@ -255,19 +260,19 @@ Bitwise logical exclusive or.<br>
 </div>
 
 <pre><span id="VALlognot"><span class="keyword">val</span> lognot</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-Bitwise logical negation. 
+Bitwise logical negation.
     The identity <code class="code">lognot a</code>=<code class="code">-a-1</code> always hold.<br>
 </div>
 
 <pre><span id="VALshift_left"><span class="keyword">val</span> shift_left</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-Shifts to the left. 
+Shifts to the left.
     Equivalent to a multiplication by a power of 2.
     The second argument must be non-negative.<br>
 </div>
 
 <pre><span id="VALshift_right"><span class="keyword">val</span> shift_right</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-Shifts to the right. 
-    This is an arithmetic shift, 
+Shifts to the right.
+    This is an arithmetic shift,
     equivalent to a division by a power of 2 with rounding towards -oo.
     The second argument must be non-negative.<br>
 </div>
@@ -303,20 +308,20 @@ Returns the number of trailing 0 bits in the given number.
 </div>
 
 <pre><span id="VALpopcount"><span class="keyword">val</span> popcount</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
-Counts the number of bits set. 
+Counts the number of bits set.
     Raises <code class="code">Overflow</code> for negative arguments, as those have an infinite
     number of bits set.<br>
 </div>
 
 <pre><span id="VALhamdist"><span class="keyword">val</span> hamdist</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
-Counts the number of different bits. 
+Counts the number of different bits.
     Raises <code class="code">Overflow</code> if the arguments have different signs
     (in which case the distance is infinite).<br>
 </div>
 <br>
 <h1 id="1_Conversions">Conversions</h1><br>
 <br>
-Note that, when converting to an integer type that cannot represent the 
+Note that, when converting to an integer type that cannot represent the
     converted value, an <code class="code">Overflow</code> exception is raised.<br>
 
 <pre><span id="VALto_int"><span class="keyword">val</span> to_int</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int</code></pre><div class="info ">
@@ -417,7 +422,7 @@ To be used as <code class="code">%a</code> format printer in <code class="code">
 </div>
 
 <pre><span id="VALpp_print"><span class="keyword">val</span> pp_print</span> : <code class="type">Format.formatter -> <a href="Z.html#TYPEt">t</a> -> unit</code></pre><div class="info ">
-Prints the argument on the specified formatter. 
+Prints the argument on the specified formatter.
     Can be used as <code class="code">%a</code> format printer in <code class="code">Format.printf</code> and as
     argument to <code class="code">#install_printer</code> in the top-level.<br>
 </div>
@@ -485,7 +490,7 @@ Hashes a number.
 <h1 id="1_Elementarynumbertheory">Elementary number theory</h1><br>
 
 <pre><span id="VALgcd"><span class="keyword">val</span> gcd</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-Greatest common divisor. 
+Greatest common divisor.
     The result is always positive.
     Raises a <code class="code">Division_by_zero</code> is either argument is null.<br>
 </div>
@@ -493,7 +498,7 @@ Greatest common divisor.
 <pre><span id="VALgcdext"><span class="keyword">val</span> gcdext</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">gcdext u v</code> returns <code class="code">(g,s,t)</code>  where <code class="code">g</code> is the greatest common divisor
     and <code class="code">g=us+vt</code>.
-    <code class="code">g</code> is always positive.      
+    <code class="code">g</code> is always positive.
     Raises a <code class="code">Division_by_zero</code> is either argument is null.
 <p>
 
@@ -508,7 +513,7 @@ Least common multiple.
 
 <pre><span id="VALpowm"><span class="keyword">val</span> powm</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
 <code class="code">powm base exp mod</code> computes <code class="code">base</code>^<code class="code">exp</code> modulo <code class="code">mod</code>.
-    Negative <code class="code">exp</code> are supported, in which case (<code class="code">base</code>^-1)^(-<code class="code">exp</code>) modulo 
+    Negative <code class="code">exp</code> are supported, in which case (<code class="code">base</code>^-1)^(-<code class="code">exp</code>) modulo
     <code class="code">mod</code> is computed.
     However, if <code class="code">exp</code> is negative but <code class="code">base</code> has no inverse modulo <code class="code">mod</code>, then
     a <code class="code">Division_by_zero</code> is raised.<br>
@@ -547,7 +552,7 @@ Returns the next prime greater than the argument.
 <code class="code">pow base exp</code> raises <code class="code">base</code> to the <code class="code">exp</code> power.
     <code class="code">exp</code> must be non-negative.
     Note that only exponents fitting in a machine integer are supported, as
-    larger exponents would surely make the result's size overflow the 
+    larger exponents would surely make the result's size overflow the
     address space.<br>
 </div>
 
@@ -558,7 +563,7 @@ Returns the square root. The result is truncated (rounded down
 </div>
 
 <pre><span id="VALsqrt_rem"><span class="keyword">val</span> sqrt_rem</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> * <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-Returns the square root truncated, and the remainder. 
+Returns the square root truncated, and the remainder.
     Raises an <code class="code">Invalid_argument</code> on negative arguments.<br>
 </div>
 
@@ -596,7 +601,7 @@ Returns the number of machine words used to represent the number.<br>
 </div>
 
 <pre><span id="VALextract"><span class="keyword">val</span> extract</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
-<code class="code">extract a off len</code> returns a non-negative number corresponding to bits 
+<code class="code">extract a off len</code> returns a non-negative number corresponding to bits
     <code class="code">off</code> to <code class="code">off</code>+<code class="code">len</code>-1 of <code class="code">b</code>.
     Negative <code class="code">a</code> are considered in infinite-length 2's complement
     representation.<br>
@@ -606,14 +611,14 @@ Returns the number of machine words used to represent the number.<br>
 <code class="code">signed_extract a off len</code> extracts bits <code class="code">off</code> to <code class="code">off</code>+<code class="code">len</code>-1 of <code class="code">b</code>,
     as <code class="code">extract</code> does, then sign-extends bit <code class="code">len-1</code> of the result
     (that is, bit <code class="code">off + len - 1</code> of <code class="code">a</code>).  The result is between
-    <code class="code">- 2{^[len]-1}</code> (included) and <code class="code">2{^[len]-1}</code> (excluded), 
+    <code class="code">- 2{^[len]-1}</code> (included) and <code class="code">2{^[len]-1}</code> (excluded),
     and equal to <code class="code">extract a off len</code> modulo <code class="code">2{^len}</code>.<br>
 </div>
 
 <pre><span id="VALto_bits"><span class="keyword">val</span> to_bits</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> string</code></pre><div class="info ">
 Returns a binary representation of the argument.
     The string result should be interpreted as a sequence of bytes,
-    corresponding to the binary representation of the absolute value of 
+    corresponding to the binary representation of the absolute value of
     the argument in little endian ordering.
     The sign is not stored in the string.<br>
 </div>
@@ -629,7 +634,7 @@ Constructs a number from a binary string representation.
 <br>
 <h1 id="1_Prefixandinfixoperators">Prefix and infix operators</h1><br>
 <br>
-Classic (and less classic) prefix and infix <code class="code">int</code> operators are 
+Classic (and less classic) prefix and infix <code class="code">int</code> operators are
    redefined on <code class="code">t</code>.
 <p>
 
@@ -707,6 +712,30 @@ Conversion from <code class="code">int</code> <code class="code">of_int</code>.<
 
 <pre><span id="VAL( ** )"><span class="keyword">val</span> ( ** )</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> int -> <a href="Z.html#TYPEt">t</a></code></pre><div class="info ">
 Power <code class="code">pow</code>.<br>
+</div>
+
+<pre><span id="VAL(=)"><span class="keyword">val</span> (=)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">equal</code>.<br>
+</div>
+
+<pre><span id="VAL(<)"><span class="keyword">val</span> (&lt;)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">lt</code>.<br>
+</div>
+
+<pre><span id="VAL(>)"><span class="keyword">val</span> (&gt;)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">gt</code>.<br>
+</div>
+
+<pre><span id="VAL(<=)"><span class="keyword">val</span> (&lt;=)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">leq</code>.<br>
+</div>
+
+<pre><span id="VAL(>=)"><span class="keyword">val</span> (&gt;=)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+Same as <code class="code">geq</code>.<br>
+</div>
+
+<pre><span id="VAL(<>)"><span class="keyword">val</span> (&lt;&gt;)</span> : <code class="type"><a href="Z.html#TYPEt">t</a> -> <a href="Z.html#TYPEt">t</a> -> bool</code></pre><div class="info ">
+<code class="code">a &lt;&gt; b</code> is equivalent to <code class="code">not (equal a b)</code>.<br>
 </div>
 <br>
 <h1 id="1_Miscellaneous">Miscellaneous</h1><br>
